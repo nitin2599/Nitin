@@ -1,0 +1,51 @@
+plugins {
+    id 'org.springframework.boot' version '2.4.5'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+    id "org.openapi.generator" version "5.1.0"
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+//	implementation 'org.springframework.boot:spring-boot-starter-data-cassandra-reactive'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '2.4.2'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version: '2.4.2'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.4.2'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+
+//	testImplementation 'io.projectreactor:reactor-test'
+    implementation group: 'io.swagger', name: 'swagger-annotations', version: '1.6.2'
+    compile "org.openapitools:jackson-databind-nullable:0.2.1"
+    implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.16'
+
+}
+
+test {
+    useJUnitPlatform()
+}
+
+openApiGenerate {
+    generatorName = "spring"
+    inputSpec = "$rootDir/src/main/resources/user.yaml"
+    outputDir = "$buildDir/generated/openapi".toString()
+    modelPackage = "com.example.userManagement.model"
+}
+
+task copyDir {
+    dependsOn 'openApiGenerate'
+    doLast {
+        copy {
+            from "$buildDir/generated/openapi/src/main/java/com/example/userManagement/model".toString()
+            into "$rootDir/src/main/java/com/example/userManagement/model".toString()
+        }
+    }
+}
