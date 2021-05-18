@@ -15,14 +15,13 @@ repositories {
 
 
 dependencies {
-//	implementation 'org.springframework.boot:spring-boot-starter-data-cassandra-reactive'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '2.4.2'
     implementation group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version: '2.4.2'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.4.2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-cassandra', version: '2.4.5'
 
-//	testImplementation 'io.projectreactor:reactor-test'
     implementation group: 'io.swagger', name: 'swagger-annotations', version: '1.6.2'
     compile "org.openapitools:jackson-databind-nullable:0.2.1"
     implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.16'

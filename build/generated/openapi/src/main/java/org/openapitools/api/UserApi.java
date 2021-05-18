@@ -5,6 +5,7 @@
  */
 package org.openapitools.api;
 
+import java.util.UUID;
 import com.example.userManagement.model.User;
 import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,7 @@ import javax.validation.constraints.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-05-18T10:53:20.574+05:30[Asia/Kolkata]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-05-18T14:54:08.223+05:30[Asia/Kolkata]")
 @Validated
 @Api(value = "user", description = "the user API")
 public interface UserApi {
@@ -38,24 +39,19 @@ public interface UserApi {
      * @return successful operation (status code 200)
      *         or successful operation (status code 200)
      */
-    @ApiOperation(value = "Create user", nickname = "createUser", notes = "We can create user by adding user info!", response = User.class, tags={ "user", })
+    @ApiOperation(value = "Create user", nickname = "createUser", notes = "We can create user by adding user info!", response = UUID.class, tags={ "user", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "successful operation", response = User.class),
+        @ApiResponse(code = 200, message = "successful operation", response = UUID.class),
         @ApiResponse(code = 200, message = "successful operation") })
     @PostMapping(
         value = "/user",
         produces = { "application/xml", "application/json" }
     )
-    default ResponseEntity<User> createUser(@ApiParam(value = "Created user object" ,required=true )  @Valid @RequestBody User body) {
+    default ResponseEntity<UUID> createUser(@ApiParam(value = "Created user object" ,required=true )  @Valid @RequestBody User body) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"firstName\" : \"firstName\", \"lastName\" : \"lastName\", \"password\" : \"password\", \"phone\" : \"phone\", \"id\" : 0, \"email\" : \"email\", \"username\" : \"username\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/xml"))) {
-                    String exampleString = "<User> <id>123456789</id> <username>aeiou</username> <firstName>aeiou</firstName> <lastName>aeiou</lastName> <email>aeiou</email> <password>aeiou</password> <phone>aeiou</phone> </User>";
+                    String exampleString = "";
                     ApiUtil.setExampleResponse(request, "application/xml", exampleString);
                     break;
                 }
@@ -72,13 +68,13 @@ public interface UserApi {
      *
      * @param userId userId that needs to be deleted (required)
      * @return successful operation (status code 200)
-     *         or Invalid username supplied (status code 400)
+     *         or Invalid userId supplied (status code 400)
      *         or User not found (status code 404)
      */
     @ApiOperation(value = "Delete user", nickname = "deleteUser", notes = "This can only be done by the logged in user.", response = Boolean.class, tags={ "user", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "successful operation", response = Boolean.class),
-        @ApiResponse(code = 400, message = "Invalid username supplied"),
+        @ApiResponse(code = 400, message = "Invalid userId supplied"),
         @ApiResponse(code = 404, message = "User not found") })
     @DeleteMapping(
         value = "/user/{userId}",
@@ -104,19 +100,19 @@ public interface UserApi {
      *
      * @param userId The user id that needs to be fetched. (required)
      * @return successful operation (status code 200)
-     *         or Invalid username supplied (status code 400)
+     *         or Invalid userId supplied (status code 400)
      *         or User not found (status code 404)
      */
-    @ApiOperation(value = "Get user by user id", nickname = "getUserByName", notes = "", response = User.class, tags={ "user", })
+    @ApiOperation(value = "Get user by user id", nickname = "getUserById", notes = "", response = User.class, tags={ "user", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "successful operation", response = User.class),
-        @ApiResponse(code = 400, message = "Invalid username supplied"),
+        @ApiResponse(code = 400, message = "Invalid userId supplied"),
         @ApiResponse(code = 404, message = "User not found") })
     @GetMapping(
         value = "/user/{userId}",
         produces = { "application/xml", "application/json" }
     )
-    default ResponseEntity<User> getUserByName(@ApiParam(value = "The user id that needs to be fetched.",required=true) @PathVariable("userId") String userId) {
+    default ResponseEntity<User> getUserById(@ApiParam(value = "The user id that needs to be fetched.",required=true) @PathVariable("userId") String userId) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
