@@ -36,12 +36,8 @@ paths:
       parameters:
         - $ref: "#/components/parameters/Query"
       responses:
-        '200':
-          description: This is a user info!.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/UserResponse"
+        "200":
+          $ref: "#/components/schemas/UserResponse"
         "400":
           $ref: "#/components/responses/GetErrorResponse"
         "401":
@@ -68,7 +64,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/User"
+                $ref: "#/components/schemas/UserResponse"
         '400':
           $ref: "#/components/responses/GetErrorResponse"
         '404':
@@ -113,11 +109,7 @@ paths:
             $ref: "#/components/parameters/userId"
       responses:
         '200':
-          description: This is a user info!.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/parameters/userId"
+          $ref: "#/components/parameters/userId"
         '400':
           $ref: "#/components/responses/GetErrorResponse"
         '404':
@@ -140,12 +132,8 @@ paths:
         - $ref: "#/components/parameters/PageSize"
         - $ref: "#/components/parameters/PageOffset"
       responses:
-        '200':
-          description: This is a user info!.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/UserResponse"
+        "200":
+          $ref: '#/components/schemas/User'
         "400":
           $ref: "#/components/responses/GetErrorResponse"
         "401":
