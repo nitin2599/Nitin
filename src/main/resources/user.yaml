@@ -1,16 +1,10 @@
-swagger: '2.0'
+openapi: 3.0.3
 info:
-  description: 'This is a demo user management server. '
+  description: 'This is a demo user management serivce '
   version: 1.0.0
   title: User Management
-host: 'localhost:8080'
-basePath: /v2
-tags:
-  - name: user
-    description: Operations about user
-schemes:
-  - https
-  - http
+servers:
+  - url: localhost:8081
 paths:
   /user:
     post:
@@ -19,44 +13,34 @@ paths:
       summary: Create user
       description: We can create user by adding user info!
       operationId: createUser
-      produces:
-        - application/xml
-        - application/json
       parameters:
-        - in: body
+        - in: query
           name: body
           description: Created user object
           required: true
           schema:
-            $ref: '#/definitions/User'
+            $ref: '#/components/schemas/User'
       responses:
         '200':
-          description: successful operation
-          schema:
-            $ref: 'UUID'
+          $ref: '#/components/schemas/User'
         default:
           description: successful operation
-  '/user/{userId}':
+  "/user/{userId}":
     get:
       tags:
         - user
       summary: Get user by user id
       description: ''
       operationId: getUserById
-      produces:
-        - application/xml
-        - application/json
       parameters:
-        - name: userId
-          in: path
-          description: The user id that needs to be fetched.
+        - in: path
+          name: userId
           required: true
-          type: string
+          schema:
+            $ref: "#/components/parameters/userId"
       responses:
         '200':
-          description: successful operation
-          schema:
-            $ref: '#/definitions/User'
+          $ref: '#/components/schemas/User'
         '400':
           description: Invalid userId supplied
         '404':
@@ -67,26 +51,17 @@ paths:
       summary: Updated user
       description: This can only be done by the logged in user.
       operationId: updateUser
-      produces:
-        - application/xml
-        - application/json
       parameters:
-        - name: userId
-          in: path
-          description: user id that need to be updated
-          required: true
-          type: string
-        - in: body
-          name: body
-          description: Updated user object
+        - in: path
+          name: userId
           required: true
           schema:
-            $ref: '#/definitions/User'
+            $ref: "#/components/parameters/userId"
+      requestBody:
+        $ref: '#/components/requestBodies/users'
       responses:
         '200':
-          description: successful operation
-          schema:
-            $ref: '#/definitions/User'
+          $ref: '#/components/schemas/User'
         '400':
           description: Invalid user supplied
         '404':
@@ -97,53 +72,195 @@ paths:
       summary: Delete user
       description: This can only be done by the logged in user.
       operationId: deleteUser
-      produces:
-        - application/xml
-        - application/json
       parameters:
         - name: userId
           in: path
           description: userId that needs to be deleted
           required: true
-          type: string
+          schema:
+            $ref: "#/components/parameters/userId"
       responses:
         '200':
-          description: successful operation
-          schema:
-            $ref: boolean
+          $ref: "#/components/parameters/userId"
         '400':
           description: Invalid userId supplied
         '404':
           description: User not found
-definitions:
-  User:
-    type: object
-    properties:
-      id:
-        type: integer
-        format: int64
-      username:
-        type: string
-      firstName:
-        type: string
-      lastName:
-        type: string
-      email:
-        type: string
-      password:
-        type: string
-      phone:
-        type: string
+  '/userHistory/{userId}/change-log':
+    get:
+      tags:
+        - Change Log
+      summary: Get the User change log
+      operationId: getUserChangeLog
+      parameters:
+        - name: userId
+          in: path
+          description: userId that needs to be deleted
+          required: true
+          schema:
+            $ref: "#/components/parameters/userId"
+        - $ref: "#/components/parameters/StartDateTime"
+        - $ref: "#/components/parameters/Duration"
+        - $ref: "#/components/parameters/PageSize"
+        - $ref: "#/components/parameters/PageOffset"
+      responses:
+        "200":
+          $ref: '#/components/schemas/User'
+        "400":
+          $ref: "#/components/responses/GetErrorResponse"
+        "401":
+          $ref: "#/components/responses/GetErrorResponse"
+        "404":
+          $ref: "#/components/responses/GetErrorResponse"
 
-    xml:
-      name: User
-  ApiResponse:
-    type: object
-    properties:
-      code:
+
+components:
+  parameters:
+    userId:
+      description: Unique user id for user.
+      name: userId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    PageSize:
+      description: Number of items to return.
+      name: limit
+      in: query
+      required: false
+      schema:
         type: integer
-        format: int32
-      type:
-        type: string
-      message:
-        type: string
+        minimum: 1
+        maximum: 100
+        default: 50
+    PageOffset:
+      description: Number of items to skip from start.
+      name: offset
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
+    StartDateTime:
+      description: Start time of the change log in unix epoch format.
+      name: from
+      in: query
+      required: true
+      schema:
+        type: integer
+    Duration:
+      description: Number of days for which change log is to be returned.
+      name: Time duration
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 31
+        default: 1
+
+  requestBodies:
+    users:
+      description: user Response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/User'
+
+  schemas:
+    User:
+      description: User info
+      type: object
+      required:
+        - username
+        - firstName
+        - lastName
+        - email
+        - password
+        - phone
+      properties:
+        id:
+          type: string
+          format: uuid
+        username:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        phone:
+          type: string
+    ErrorResponse:
+      type: object
+      required:
+        - error
+        - request
+      properties:
+        error:
+          $ref: "#/components/schemas/Error"
+        request:
+          $ref: "#/components/schemas/Request"
+    Error:
+      description: Error Information
+      type: object
+      required:
+        - code
+        - description
+      properties:
+        code:
+          type: string
+          description: Error code
+        description:
+          type: string
+          description: Error description
+        additionalInfo:
+          type: object
+          description: Additional information related to the error
+    Request:
+      type: object
+      required:
+        - uri
+      properties:
+        uri:
+          description: The API end point where the request was received
+          type: string
+        method:
+          description: HTTP method requested on the API endpoint
+          type: string
+          enum:
+            - POST
+            - GET
+            - PUT
+        queryString:
+          description: Query string received by the server
+          type: string
+        body:
+          description: Request body data received by the server
+          type: object
+    GetErrorResponse:
+      allOf:
+        - $ref: "#/components/schemas/ErrorResponse"
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                id:
+                  type: string
+
+  responses:
+    GetErrorResponse:
+      description: Error Occurred
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GetErrorResponse"
+
+
+

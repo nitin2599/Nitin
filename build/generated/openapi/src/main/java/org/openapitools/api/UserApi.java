@@ -5,9 +5,11 @@
  */
 package org.openapitools.api;
 
+import java.security.PrivateKey;
 import java.util.UUID;
 import com.example.userManagement.model.User;
 import io.swagger.annotations.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +24,7 @@ import javax.validation.constraints.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-05-18T14:54:08.223+05:30[Asia/Kolkata]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-05-18T15:21:55.033+05:30[Asia/Kolkata]")
 @Validated
 @Api(value = "user", description = "the user API")
 public interface UserApi {
@@ -30,6 +32,9 @@ public interface UserApi {
     default Optional<NativeWebRequest> getRequest() {
         return Optional.empty();
     }
+
+    @Autowired
+    PrivateKey
 
     /**
      * POST /user : Create user
