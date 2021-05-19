@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  description: 'This is a demo user management serivce '
+  description: 'This is a demo user management service '
   version: 1.0.0
   title: User Management
 servers:
@@ -9,7 +9,7 @@ paths:
   /user:
     post:
       tags:
-        - user
+        - user operations
       summary: Create user
       description: We can create user by adding user info!
       operationId: createUser
@@ -25,10 +25,30 @@ paths:
           $ref: '#/components/schemas/User'
         default:
           description: successful operation
+    get:
+      tags:
+        - Filter user data
+      summary: Get all User data  with some filters.
+      description: >
+        Get list of all Users data
+
+      operationId: getAllUsers
+      parameters:
+        - $ref: "#/components/parameters/Query"
+      responses:
+        "200":
+          $ref: "#/components/schemas/UserResponse"
+        "400":
+          $ref: "#/components/responses/ErrorResponse"
+        "401":
+          $ref: "#/components/responses/ErrorResponse"
+        "404":
+          $ref: "#/components/responses/ErrorResponse"
+
   "/user/{userId}":
     get:
       tags:
-        - user
+        - user operations
       summary: Get user by user id
       description: ''
       operationId: getUserById
@@ -40,14 +60,14 @@ paths:
             $ref: "#/components/parameters/userId"
       responses:
         '200':
-          $ref: '#/components/schemas/User'
+          $ref: "#/components/schemas/UserResponse"
         '400':
           description: Invalid userId supplied
         '404':
           description: User not found
     put:
       tags:
-        - user
+        - user operations
       summary: Updated user
       description: This can only be done by the logged in user.
       operationId: updateUser
@@ -58,17 +78,17 @@ paths:
           schema:
             $ref: "#/components/parameters/userId"
       requestBody:
-        $ref: '#/components/requestBodies/users'
+        $ref: '#/components/requestBodies/User'
       responses:
         '200':
-          $ref: '#/components/schemas/User'
+          $ref: "#/components/schemas/UserResponse"
         '400':
           description: Invalid user supplied
         '404':
           description: User not found
     delete:
       tags:
-        - user
+        - user operations
       summary: Delete user
       description: This can only be done by the logged in user.
       operationId: deleteUser
@@ -160,9 +180,28 @@ components:
         minimum: 1
         maximum: 31
         default: 1
+    Query:
+      name: query
+      in: query
+      description: >-
+        Query criteria. Refer following links for more details:<br/> -
+        [match](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-match-query.html)<br/>
+
+        - [multi_match](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-multi-match-query.html)<br/>
+
+        - [term](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-term-query.html)<br/>
+
+        - [terms](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-terms-query.html)<br/>
+
+        - [range](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-range-query.html)<br/>
+
+        - [regexp](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-regexp-query.html)
+      schema:
+        $ref: "#/components/schemas/Query"
+
 
   requestBodies:
-    users:
+    User:
       description: user Response
       content:
         application/json:
@@ -170,6 +209,23 @@ components:
             $ref: '#/components/schemas/User'
 
   schemas:
+    UserResponse:
+      type: object
+      properties:
+        error:
+          $ref: "#/components/schemas/Error"
+        data:
+          type: object
+          properties:
+            User:
+              type: array
+              items:
+                $ref: "#/components/schemas/User"
+            totalItems:
+              type: integer
+              format: int64
+        request:
+          $ref: "#/components/schemas/Request"
     User:
       description: User info
       type: object
@@ -184,6 +240,7 @@ components:
         id:
           type: string
           format: uuid
+          readOnly: true
         username:
           type: string
         firstName:
@@ -196,6 +253,33 @@ components:
           type: string
         phone:
           type: string
+    Query:
+      properties:
+        match:
+          type: array
+          items:
+            type: object
+        multi_match:
+          type: array
+          items:
+            type: object
+        term:
+          type: array
+          items:
+            type: object
+        terms:
+          type: array
+          items:
+            type: object
+        range:
+          type: array
+          items:
+            type: object
+        regexp:
+          type: array
+          items:
+            type: object
+
     ErrorResponse:
       type: object
       required:
@@ -255,12 +339,15 @@ components:
                   type: string
 
   responses:
+    ErrorResponse:
+      description: Error Occurred
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
     GetErrorResponse:
       description: Error Occurred
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/GetErrorResponse"
-
-
-
