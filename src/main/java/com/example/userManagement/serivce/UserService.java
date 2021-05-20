@@ -22,4 +22,12 @@ public class UserService {
         return userRepository.findById(userId).
                 orElseThrow(() -> new RuntimeException("User Not Found"));
     }
+
+    public User updateUser(User user){
+         return userRepository.save(user);
+    }
+
+    public void deleteUserById(UUID userId){
+        userRepository.deleteById(userId);
+    }
 }

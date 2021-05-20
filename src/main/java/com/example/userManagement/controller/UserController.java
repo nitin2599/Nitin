@@ -1,15 +1,14 @@
 package com.example.userManagement.controller;
 
-import com.example.userManagement.model.GetErrorResponse;
-import com.example.userManagement.model.Query;
-import com.example.userManagement.model.User;
-import com.example.userManagement.model.UserResponse;
+import com.example.userManagement.kafka.EventChannelHandler;
+import com.example.userManagement.model.*;
 import com.example.userManagement.serivce.UserService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -25,10 +24,15 @@ import java.util.UUID;
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-05-20T10:11:08.040+05:30[Asia/Kolkata]")
 @Validated
 @Api(value = "user", description = "the user API")
+@RestController
 public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private EventChannelHandler channelHandler;
+
 
     /**
      * POST /user : Create user
@@ -50,7 +54,9 @@ public class UserController {
             consumes = {"application/json"}
     )
     public User createUser(@ApiParam(value = "user Request") @Valid @RequestBody(required = false) User user) {
-        return userService.createUser(user);
+        User createdUser = userService.createUser(user);
+        channelHandler.publishUserEvent(Event.CREATE, user);
+        return createdUser;
     }
 
 
@@ -72,9 +78,8 @@ public class UserController {
             value = "/user/{userId}",
             produces = {"application/json"}
     )
-    public ResponseEntity<UUID> deleteUser(@ApiParam(value = "userId that needs to be deleted", required = true) @PathVariable("userId") UUID userId) {
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
+    public void deleteUser(@ApiParam(value = "userId that needs to be deleted", required = true) @PathVariable("userId") UUID userId) {
+        userService.deleteUserById(userId);
     }
 
 
@@ -146,8 +151,11 @@ public class UserController {
             produces = {"application/json"},
             consumes = {"application/json"}
     )
-    public ResponseEntity<User> updateUser(@ApiParam(value = "", required = true) @PathVariable("userId") UUID userId, @ApiParam(value = "user Request") @Valid @RequestBody(required = false) User user) {
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+    public User updateUser(@ApiParam(value = "", required = true) @PathVariable("userId") UUID userId, @ApiParam(value = "user Request") @Valid @RequestBody(required = false) User user) {
+        user.setId(userId);
+        return userService.updateUser(user);
     }
+
+
 
 }

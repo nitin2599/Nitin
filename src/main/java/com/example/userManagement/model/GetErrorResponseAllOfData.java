@@ -12,7 +12,7 @@ import javax.validation.constraints.*;
 /**
  * GetErrorResponseAllOfData
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-05-20T10:11:08.040+05:30[Asia/Kolkata]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-05-20T10:30:25.036+05:30[Asia/Kolkata]")
 public class GetErrorResponseAllOfData   {
   @JsonProperty("id")
   private String id;

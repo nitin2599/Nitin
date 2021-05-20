@@ -7,16 +7,21 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.UUID;
 import org.openapitools.jackson.nullable.JsonNullable;
+import org.springframework.data.cassandra.core.mapping.PrimaryKey;
+import org.springframework.data.cassandra.core.mapping.Table;
+
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
  * User
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-05-20T10:11:08.040+05:30[Asia/Kolkata]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-05-20T10:30:25.036+05:30[Asia/Kolkata]")
+@Table
 public class User   {
+  @PrimaryKey
   @JsonProperty("id")
-  private UUID id;
+  private UUID id = UUID.randomUUID();
 
   @JsonProperty("username")
   private String username;
@@ -69,7 +74,7 @@ public class User   {
   @ApiModelProperty(required = true, value = "")
   @NotNull
 
-@Pattern(regexp="^[a-zA-Z]{1-16}$") @Size(min=1,max=16) 
+@Pattern(regexp= "^[a-zA-Z]{1,16}$") @Size(min=1,max=16)
   public String getUsername() {
     return username;
   }

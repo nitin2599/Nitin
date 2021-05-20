@@ -21,11 +21,12 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-cassandra', version: '2.4.5'
+    implementation group: 'org.springframework.kafka', name: 'spring-kafka', version: '2.6.4'
 
     implementation group: 'io.swagger', name: 'swagger-annotations', version: '1.6.2'
     compile "org.openapitools:jackson-databind-nullable:0.2.1"
     implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.16'
-
+    annotationProcessor 'org.projectlombok:lombok:1.18.12'
 }
 
 test {
