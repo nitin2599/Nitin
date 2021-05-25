@@ -5,16 +5,22 @@ spring:
       contact-points: mycassandra
       keyspace-name: mykeyspace
       entity-base-package: com.example.userManagement.model
+    elasticsearch:
+      cluster-nodes: http://localhost:9200
+      repositories:
+        enabled: true
+
 
   kafka:
     consumer:
-      bootstrap-servers: localhost:29092
+      bootstrap-servers: localhost:9092
       group-id: group_id
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
     producer:
       bootstrap-servers: localhost:9092
+      group-id: group_id
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
     topics:

@@ -1,7 +1,6 @@
-package com.example.userManagement.serivce;
+package com.example.userManagement.service;
 
 import com.example.userManagement.Repository.UserRepository;
-import com.example.userManagement.controller.UserController;
 import com.example.userManagement.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,11 +22,12 @@ public class UserService {
                 orElseThrow(() -> new RuntimeException("User Not Found"));
     }
 
-    public User updateUser(User user){
-         return userRepository.save(user);
+    public User updateUser(UUID userId, User user) {
+        user.setId(userId);
+        return userRepository.save(user);
     }
 
-    public void deleteUserById(UUID userId){
+    public void deleteUserById(UUID userId) {
         userRepository.deleteById(userId);
     }
 }

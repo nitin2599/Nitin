@@ -1,5 +1,6 @@
-package com.example.userManagement.kafka;
+package com.example.userManagement.config;
 
+import com.example.userManagement.kafka.KafkaProducerLoggerCallback;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

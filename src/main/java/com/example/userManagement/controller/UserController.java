@@ -2,23 +2,17 @@ package com.example.userManagement.controller;
 
 import com.example.userManagement.kafka.EventChannelHandler;
 import com.example.userManagement.model.*;
-import com.example.userManagement.serivce.UserService;
+import com.example.userManagement.model.index.UserIndexModel;
+import com.example.userManagement.service.UserService;
+import com.example.userManagement.service.UserServiceES;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.NativeWebRequest;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import javax.validation.constraints.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-05-20T10:11:08.040+05:30[Asia/Kolkata]")
@@ -32,6 +26,9 @@ public class UserController {
 
     @Autowired
     private EventChannelHandler channelHandler;
+
+    @Autowired
+    private UserServiceES userServiceES;
 
 
     /**
@@ -99,13 +96,9 @@ public class UserController {
             @ApiResponse(code = 400, message = "Error Occurred", response = GetErrorResponse.class),
             @ApiResponse(code = 401, message = "Error Occurred", response = GetErrorResponse.class),
             @ApiResponse(code = 404, message = "Error Occurred", response = GetErrorResponse.class)})
-    @GetMapping(
-            value = "/user",
-            produces = {"application/json"}
-    )
-    public ResponseEntity<UserResponse> getAllUsers(@ApiParam(value = "Query criteria. Refer following links for more details:<br/> - [match](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-match-query.html)<br/> - [multi_match](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-multi-match-query.html)<br/> - [term](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-term-query.html)<br/> - [terms](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-terms-query.html)<br/> - [range](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-range-query.html)<br/> - [regexp](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-regexp-query.html)") @Valid Query query) {
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
+    @GetMapping(value = "/user")
+    public List<UserIndexModel> getAllUsers(@ApiParam(value = "Query criteria. Refer following links for more details:<br/> - [match](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-match-query.html)<br/> - [multi_match](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-multi-match-query.html)<br/> - [term](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-term-query.html)<br/> - [terms](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-terms-query.html)<br/> - [range](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-range-query.html)<br/> - [regexp](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-regexp-query.html)") @Valid Query query) {
+        return userServiceES.findUserByQuery(query);
     }
 
 
@@ -130,7 +123,6 @@ public class UserController {
         return userService.getUserById(userId);
     }
 
-
     /**
      * PUT /user/{userId} : Updated user
      * This can only be done by the logged in user.
@@ -152,10 +144,6 @@ public class UserController {
             consumes = {"application/json"}
     )
     public User updateUser(@ApiParam(value = "", required = true) @PathVariable("userId") UUID userId, @ApiParam(value = "user Request") @Valid @RequestBody(required = false) User user) {
-        user.setId(userId);
-        return userService.updateUser(user);
+        return userService.updateUser(userId, user);
     }
-
-
-
 }
