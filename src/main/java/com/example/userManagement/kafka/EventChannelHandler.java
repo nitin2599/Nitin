@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 import java.util.function.Function;
 
 
@@ -42,6 +43,12 @@ public class EventChannelHandler {
     }
 
     public void publishUserEvent(Event eventType, User user) {
+        publish(createUserEvent(eventType, user));
+    }
+
+    public void publishUserEventWithUserId(Event eventType, UUID uuid) {
+        User user = new User();
+        user.setId(uuid);
         publish(createUserEvent(eventType, user));
     }
 

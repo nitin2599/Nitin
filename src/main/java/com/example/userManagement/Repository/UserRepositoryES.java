@@ -10,6 +10,6 @@ import java.util.UUID;
 @Repository
 public interface UserRepositoryES extends ElasticsearchRepository<UserIndexModel, UUID> {
 
-    UserIndexModel findByName(String name);
+//    UserIndexModel findByName(String name);
 
 }

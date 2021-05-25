@@ -1,5 +1,7 @@
 package com.example.userManagement.model.index;
 
+import com.example.userManagement.model.Event;
+import com.example.userManagement.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,13 +22,12 @@ import java.util.UUID;
 public class UserIndexModel {
 
     @Id
-    private UUID id;
-    @JsonProperty("username")
-    private String username;
-    @JsonProperty("name")
-    private String name;
-    @JsonProperty("phone")
-    private String phone;
+    private UUID id ;
+
+    @Field(type = FieldType.Nested, includeInParent = true)
+    private User user;
+    @Field(type = FieldType.Text)
+    private Event event;
 
     @Field(type = FieldType.Date, format = DateFormat.custom, pattern = "uuuu-MM-dd'T'HH:mm:ssZZ")
     private LocalDateTime createdAt;
@@ -35,9 +36,8 @@ public class UserIndexModel {
     public String toString() {
         return "UserIndexModel{" +
                 "id=" + id +
-                ", username='" + username + '\'' +
-                ", name='" + name + '\'' +
-                ", phone='" + phone + '\'' +
+                ", user=" + user +
+                ", event=" + event +
                 ", createdAt=" + createdAt +
                 '}';
     }

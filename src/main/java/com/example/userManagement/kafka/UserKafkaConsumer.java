@@ -15,6 +15,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
 
 @Service
@@ -43,10 +44,9 @@ public class UserKafkaConsumer {
 
     private UserIndexModel transformToUserIndexModel(EventMessage eventMessage) {
         return UserIndexModel.builder()
-                .id(eventMessage.getUser().getId())
-                .username(eventMessage.getUser().getUsername())
-                .name(eventMessage.getUser().getFirstName())
-                .phone(eventMessage.getUser().getPhone())
+                .id(UUID.randomUUID())
+                .user(eventMessage.getUser())
+                .event(eventMessage.getEvent())
                 .createdAt(getLocalDateTime(eventMessage))
                 .build();
     }

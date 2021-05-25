@@ -5,9 +5,9 @@ import com.example.userManagement.model.*;
 import com.example.userManagement.model.index.UserIndexModel;
 import com.example.userManagement.service.UserService;
 import com.example.userManagement.service.UserServiceES;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,10 +50,10 @@ public class UserController {
             produces = {"application/json"},
             consumes = {"application/json"}
     )
-    public User createUser(@ApiParam(value = "user Request") @Valid @RequestBody(required = false) User user) {
+    public ResponseEntity<User> createUser(@ApiParam(value = "user Request") @Valid @RequestBody(required = false) User user) {
         User createdUser = userService.createUser(user);
         channelHandler.publishUserEvent(Event.CREATE, user);
-        return createdUser;
+        return ResponseEntity.ok(createdUser);
     }
 
 
@@ -75,8 +75,10 @@ public class UserController {
             value = "/user/{userId}",
             produces = {"application/json"}
     )
-    public void deleteUser(@ApiParam(value = "userId that needs to be deleted", required = true) @PathVariable("userId") UUID userId) {
+    public ResponseEntity<Boolean> deleteUser(@ApiParam(value = "userId that needs to be deleted", required = true) @PathVariable("userId") UUID userId) {
         userService.deleteUserById(userId);
+        channelHandler.publishUserEventWithUserId(Event.DELETE, userId);
+        return ResponseEntity.ok(true);
     }
 
 
@@ -120,7 +122,9 @@ public class UserController {
             produces = {"application/json"}
     )
     public User getUserById(@ApiParam(value = "", required = true) @PathVariable("userId") UUID userId) {
-        return userService.getUserById(userId);
+        User userById = userService.getUserById(userId);
+        channelHandler.publishUserEvent(Event.GET, userById);
+        return userById;
     }
 
     /**
@@ -143,7 +147,9 @@ public class UserController {
             produces = {"application/json"},
             consumes = {"application/json"}
     )
-    public User updateUser(@ApiParam(value = "", required = true) @PathVariable("userId") UUID userId, @ApiParam(value = "user Request") @Valid @RequestBody(required = false) User user) {
-        return userService.updateUser(userId, user);
+    public ResponseEntity<User> updateUser(@ApiParam(value = "", required = true) @PathVariable("userId") UUID userId, @ApiParam(value = "user Request") @Valid @RequestBody(required = false) User user) {
+        User updatedUser = userService.updateUser(userId, user);
+        channelHandler.publishUserEvent(Event.UPDATE, user);
+        return ResponseEntity.ok(updatedUser);
     }
 }
