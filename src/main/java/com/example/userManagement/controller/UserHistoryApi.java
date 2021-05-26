@@ -48,13 +48,13 @@ class UserHistoryApi {
             @ApiParam(value = "userId that needs to be deleted", required = true) @PathVariable("userId") UUID userId,
             @NotNull @ApiParam(value = "Start time of the change log in unix epoch format.", required = true)
             @Valid @RequestParam(value = "from", required = true) long from, @Min(1) @Max(31)
-            @ApiParam(value = "Number of days for which change log is to be returned.", defaultValue = "1")
-            @Valid @RequestParam(value = "Time duration", required = false, defaultValue = "2") long timeDuration, @Min(1) @Max(100)
+            @ApiParam(value = "Number of days for which change log is to be returned.", defaultValue = "2")
+            @Valid @RequestParam(value = "toDate", required = false, defaultValue = "2") long toDate, @Min(1)
             @ApiParam(value = "Number of items to return.", defaultValue = "50")
             @Valid @RequestParam(value = "limit", required = false, defaultValue = "50") Integer limit, @Min(0)
             @ApiParam(value = "Number of items to skip from start.", defaultValue = "0")
             @Valid @RequestParam(value = "offset", required = false, defaultValue = "0") Integer offset) {
-       return userServiceES.userHistory(userId, from, timeDuration, limit, offset);
+       return userServiceES.userHistory(userId, from, toDate, limit, offset);
     }
 
 }
