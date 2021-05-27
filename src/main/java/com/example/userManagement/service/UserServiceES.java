@@ -2,12 +2,11 @@ package com.example.userManagement.service;
 
 import com.datastax.oss.driver.shaded.guava.common.collect.Lists;
 import com.example.userManagement.Repository.UserRepositoryES;
-import com.example.userManagement.model.EventMessage;
 import com.example.userManagement.model.Query;
 import com.example.userManagement.model.index.UserIndexModel;
+import com.example.userManagement.utils.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.index.query.*;
-import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
@@ -35,13 +34,13 @@ public class UserServiceES {
 
         List<QueryBuilder> filter = new ArrayList<>();
         if (Objects.nonNull(query.getMatch()))
-            filter.add(QueryBuilders.matchQuery("user.firstName", query.getMatch().get(0)));
+            filter.add(QueryBuilders.matchQuery(Constants.USER_FIRST_NAME, query.getMatch().get(0)));
         if (Objects.nonNull(query.getMultiMatch()))
-            filter.add(QueryBuilders.multiMatchQuery(query.getMultiMatch().get(0)).field("user.firstName").field("user.lastName").field("user.username"));
+            filter.add(QueryBuilders.multiMatchQuery(query.getMultiMatch().get(0)).field(Constants.USER_FIRST_NAME).field("user.lastName").field("user.username"));
         if (Objects.nonNull(query.getTerm()))
             filter.add(QueryBuilders.termQuery("user.username", query.getTerm().get(0)));
         if (Objects.nonNull(query.getTerms()))
-            filter.add(QueryBuilders.termsQuery("user.firstName", query.getTerm()));
+            filter.add(QueryBuilders.termsQuery(Constants.USER_FIRST_NAME, query.getTerm()));
         if (Objects.nonNull(query.getRegexp()))
             filter.add(QueryBuilders.regexpQuery("user.phone", query.getRegexp().get(0).toString()));
 

@@ -14,7 +14,9 @@ import javax.validation.constraints.*;
 import java.util.List;
 import java.util.UUID;
 
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-05-20T10:30:25.036+05:30[Asia/Kolkata]")
+import static  com.example.userManagement.utils.Constants.*;
+
+
 @Validated
 @Api(value = "userHistory", description = "the userHistory API")
 @RestController
@@ -29,7 +31,6 @@ class UserHistoryApi {
      *
      * @param userId       userId that needs to be deleted (required)
      * @param from         Start time of the change log in unix epoch format. (required)
-     * @param timeDuration Number of days for which change log is to be returned. (optional, default to 1)
      * @param limit        Number of items to return. (optional, default to 50)
      * @param offset       Number of items to skip from start. (optional, default to 0)
      * @return This is a user info!. (status code 200)
@@ -48,12 +49,12 @@ class UserHistoryApi {
             @ApiParam(value = "userId that needs to be deleted", required = true) @PathVariable("userId") UUID userId,
             @NotNull @ApiParam(value = "Start time of the change log in unix epoch format.", required = true)
             @Valid @RequestParam(value = "from", required = true) long from, @Min(1) @Max(31)
-            @ApiParam(value = "Number of days for which change log is to be returned.", defaultValue = "2")
-            @Valid @RequestParam(value = "toDate", required = false, defaultValue = "2") long toDate, @Min(1)
-            @ApiParam(value = "Number of items to return.", defaultValue = "50")
-            @Valid @RequestParam(value = "limit", required = false, defaultValue = "50") Integer limit, @Min(0)
-            @ApiParam(value = "Number of items to skip from start.", defaultValue = "0")
-            @Valid @RequestParam(value = "offset", required = false, defaultValue = "0") Integer offset) {
+            @ApiParam(value = "Number of days for which change log is to be returned.", defaultValue = TO_DATE_DEFAULT)
+            @Valid @RequestParam(value = "toDate", required = false, defaultValue = TO_DATE_DEFAULT) long toDate, @Min(1)
+            @ApiParam(value = "Number of items to return.", defaultValue = LIMIT)
+            @Valid @RequestParam(value = "limit", required = false, defaultValue = LIMIT) Integer limit, @Min(0)
+            @ApiParam(value = "Number of items to skip from start.", defaultValue = OFF_SET_DEFAULT_VALUE)
+            @Valid @RequestParam(value = "offset", required = false, defaultValue = OFF_SET_DEFAULT_VALUE) Integer offset) {
        return userServiceES.userHistory(userId, from, toDate, limit, offset);
     }
 

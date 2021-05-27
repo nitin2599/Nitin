@@ -1,6 +1,7 @@
 package com.example.userManagement.service;
 
 import com.example.userManagement.Repository.UserRepository;
+import com.example.userManagement.exption.UserNotFoundException;
 import com.example.userManagement.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ public class UserService {
 
     public User getUserById(UUID userId) {
         return userRepository.findById(userId).
-                orElseThrow(() -> new RuntimeException("User Not Found"));
+                orElseThrow(() -> new UserNotFoundException(userId));
     }
 
     public User updateUser(UUID userId, User user) {
