@@ -5,17 +5,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.util.UUID;
 import org.openapitools.jackson.nullable.JsonNullable;
+import org.springframework.data.cassandra.core.mapping.PrimaryKey;
+import org.springframework.data.cassandra.core.mapping.Table;
+
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
  * User
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-05-18T10:53:20.574+05:30[Asia/Kolkata]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-05-20T10:30:25.036+05:30[Asia/Kolkata]")
+@Table
 public class User   {
+  @PrimaryKey
   @JsonProperty("id")
-  private Long id;
+  private UUID id = UUID.randomUUID();
 
   @JsonProperty("username")
   private String username;
@@ -35,7 +41,7 @@ public class User   {
   @JsonProperty("phone")
   private String phone;
 
-  public User id(Long id) {
+  public User id(UUID id) {
     this.id = id;
     return this;
   }
@@ -44,14 +50,15 @@ public class User   {
    * Get id
    * @return id
   */
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(readOnly = true, value = "")
 
+  @Valid
 
-  public Long getId() {
+  public UUID getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(UUID id) {
     this.id = id;
   }
 
@@ -64,9 +71,10 @@ public class User   {
    * Get username
    * @return username
   */
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
+  @NotNull
 
-
+@Pattern(regexp= "^[a-zA-Z]{1,16}$") @Size(min=1,max=16)
   public String getUsername() {
     return username;
   }
@@ -84,9 +92,10 @@ public class User   {
    * Get firstName
    * @return firstName
   */
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
+  @NotNull
 
-
+@Size(min=3,max=16) 
   public String getFirstName() {
     return firstName;
   }
@@ -104,9 +113,10 @@ public class User   {
    * Get lastName
    * @return lastName
   */
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
+  @NotNull
 
-
+@Size(min=3,max=16) 
   public String getLastName() {
     return lastName;
   }
@@ -124,9 +134,10 @@ public class User   {
    * Get email
    * @return email
   */
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
+  @NotNull
 
-
+@Pattern(regexp="^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$") 
   public String getEmail() {
     return email;
   }
@@ -144,9 +155,10 @@ public class User   {
    * Get password
    * @return password
   */
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
+  @NotNull
 
-
+@Size(min=8,max=16) 
   public String getPassword() {
     return password;
   }
@@ -164,9 +176,10 @@ public class User   {
    * Get phone
    * @return phone
   */
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
+  @NotNull
 
-
+@Pattern(regexp="^[0-9]{10}$") 
   public String getPhone() {
     return phone;
   }
@@ -199,21 +212,6 @@ public class User   {
     return Objects.hash(id, username, firstName, lastName, email, password, phone);
   }
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class User {\n");
-    
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    username: ").append(toIndentedString(username)).append("\n");
-    sb.append("    firstName: ").append(toIndentedString(firstName)).append("\n");
-    sb.append("    lastName: ").append(toIndentedString(lastName)).append("\n");
-    sb.append("    email: ").append(toIndentedString(email)).append("\n");
-    sb.append("    password: ").append(toIndentedString(password)).append("\n");
-    sb.append("    phone: ").append(toIndentedString(phone)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
 
   /**
    * Convert the given object to string with each line indented by 4 spaces
@@ -224,6 +222,19 @@ public class User   {
       return "null";
     }
     return o.toString().replace("\n", "\n    ");
+  }
+
+  @Override
+  public String toString() {
+    return "User{" +
+            "id=" + id +
+            ", username='" + username + '\'' +
+            ", firstName='" + firstName + '\'' +
+            ", lastName='" + lastName + '\'' +
+            ", email='" + email + '\'' +
+            ", password='" + password + '\'' +
+            ", phone='" + phone + '\'' +
+            '}';
   }
 }
 
