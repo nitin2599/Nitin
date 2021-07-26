@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.Clock;
+import java.util.*;
 import java.util.function.Function;
 
 @Configuration
@@ -24,6 +25,7 @@ public class KafkaTopicConfig {
     public <T> Function<T, KafkaProducerLoggerCallback<T>> kafkaCallback() {
         return KafkaProducerLoggerCallback::new;
     }
+
 
     @Bean
     public Clock clock() {
